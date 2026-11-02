@@ -10,15 +10,11 @@ class TransactionController extends Controller
 {
     public function index(Request $request, $accountId)
     {
-        // Get the authenticated user
         $user = $request->user();
-
-        // Verify that the account belongs to this user
+        
         $account = Account::where('id', $accountId)
             ->where('user_id', $user->id)
             ->first();
-
-        // Reject access if the account does not belong to the user
         if (!$account) {
             return response()->json([
                 'success' => false,
@@ -26,7 +22,6 @@ class TransactionController extends Controller
             ], 404);
         }
 
-        // Retrieve transactions belonging to the verified account
         $transactions = Transaction::where('account_id', $account->id)
             ->latest()
             ->get();
