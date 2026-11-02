@@ -17,13 +17,11 @@ class WithdrawalController extends Controller
 
         return DB::transaction(function () use ($validated, $id, $request) {
 
-            // Find account and verify ownership
             $account = Account::where('id', $id)
                 ->where('user_id', $request->user()->id)
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            // Check account status
             if ($account->status !== 'active') {
                 return response()->json([
                     'success' => false,
@@ -34,7 +32,6 @@ class WithdrawalController extends Controller
             $amount = $validated['amount'];
             $balanceBefore = $account->balance;
 
-            // Check available balance
             if ($amount > $balanceBefore) {
                 return response()->json([
                     'success' => false,
@@ -42,11 +39,9 @@ class WithdrawalController extends Controller
                 ], 400);
             }
 
-            // Update account balance
             $account->balance = $balanceBefore - $amount;
             $account->save();
 
-            // Record withdrawal transaction
             $transaction = Transaction::create([
                 'account_id' => $account->id,
                 'reference' => 'WTH-' . strtoupper(Str::random(12)),
