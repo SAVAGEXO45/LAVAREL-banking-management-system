@@ -7,7 +7,6 @@ use App\Models\Account;
 
 class AccountController extends Controller
 {
-    // Create a new bank account
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -39,7 +38,6 @@ class AccountController extends Controller
         ], 201);
     }
 
-    // View all accounts belonging to the logged-in customer
     public function index()
     {
         $accounts = Account::where('user_id', auth()->id())->get();
@@ -50,7 +48,6 @@ class AccountController extends Controller
         ], 200);
     }
 
-    // Check the balance of a specific account
     public function balance($id)
     {
         $account = Account::where('user_id', auth()->id())
