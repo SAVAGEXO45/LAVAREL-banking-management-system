@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
-    // Customer Registration
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -55,7 +54,6 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // Customer Login
     public function login(Request $request)
     {
         $validated = $request->validate([
